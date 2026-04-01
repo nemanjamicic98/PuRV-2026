@@ -1,0 +1,60 @@
+# breakpoint before function add
+Breakpoint 1 at 0x1155: file zeljana.c, line 5.
+
+
+# also, let's print esp and ebp every time we run
+
+
+# go
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at zeljana.c:5
+5	   int n = 2; 
+1: /a $sp = 0x7fffffffdd40
+2: /a $bp = 0xffffffffffffdd50
+
+
+# where we actually land
+Dump of assembler code for function main:
+   0x0000555555555149 <+0>:	endbr64
+   0x000055555555514d <+4>:	push   %rbp
+   0x000055555555514e <+5>:	mov    %rsp,%rbp
+   0x0000555555555151 <+8>:	sub    $0x10,%rsp
+=> 0x0000555555555155 <+12>:	movl   $0x2,-0x4(%rbp)
+   0x000055555555515c <+19>:	mov    -0x4(%rbp),%eax
+   0x000055555555515f <+22>:	mov    %eax,%esi
+   0x0000555555555161 <+24>:	lea    0xe9c(%rip),%rax        # 0x555555556004
+   0x0000555555555168 <+31>:	mov    %rax,%rdi
+   0x000055555555516b <+34>:	mov    $0x0,%eax
+   0x0000555555555170 <+39>:	call   0x555555555050 <__isoc99_scanf@plt>
+   0x0000555555555175 <+44>:	mov    $0x0,%eax
+   0x000055555555517a <+49>:	leave
+   0x000055555555517b <+50>:	ret
+End of assembler dump.
+# stack
+0x7fffffffdd40:	0xffffde30	0x00007fff	0xffffde78	0x00007fff
+0x7fffffffdd50:	0xffffddf0	0x00007fff	0xf7c2a1ca	0x00007fff
+0x7fffffffdd60:	0xffffdda0	0x00007fff	0xffffde78	0x00007fff
+0x7fffffffdd70:	0x55554040	0x00000001	0x55555149	0x00005555
+
+
+# addresses of the variables
+Symbol "n" is a complex DWARF expression:
+     0: DW_OP_fbreg -20
+.
+
+
+# continue to the next breakpoint
+[Inferior 1 (process 5625) exited normally]
+
+
+# where we actually land
+gdb_komande.txt:34: Error in sourced command file:
+No frame selected.
