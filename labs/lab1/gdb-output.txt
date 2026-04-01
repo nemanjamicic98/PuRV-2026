@@ -1,0 +1,38 @@
+# breaking the start of main
+Breakpoint 1 at 0x11f1: file filip.c, line 16.
+# go
+Starting program: /home/prota/Fakultet/treca/PURV/Lab/1/f 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at filip.c:16
+16	    int *v = createValue();
+# entering function createValue
+createValue () at filip.c:5
+5	{
+6	    int *p = malloc(sizeof(int));
+7	    *p = 10;
+9	    int x = 20;
+# value of *p:
+$1 = 10
+# value of p:
+$2 = 0x5555555592a0
+10	    p = &x;
+12	    return p;
+# value of *p:
+$3 = 20
+# value of p:
+$4 = 0x7fffffffdb9c
+13	}
+main () at filip.c:17
+17	    printf("%d\n", *v);
+# value of *v:
+$5 = 20
+# value of v:
+$6 = 0x7fffffffdb9c
+19	    return 0;
+20	}
+__libc_start_call_main (main=main@entry=0x5555555551e5 <main>, argc=argc@entry=1, argv=argv@entry=0x7fffffffdcf8) at ../sysdeps/nptl/libc_start_call_main.h:74
+warning: 74	../sysdeps/nptl/libc_start_call_main.h: No such file or directory
+[Inferior 1 (process 21239) exited normally]
+The program is not being run.
