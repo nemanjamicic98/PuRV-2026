@@ -1,0 +1,72 @@
+#Breakpoint 1 at 0x1175: file katarina.c, line 6.
+
+
+# also, let's print esp and ebp every time we run
+
+
+# go
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at katarina.c:6
+6	    int *arr = malloc(10 * sizeof(arr));
+1: /a $sp = 0x7fffffffdd90
+2: /a $bp = 0xffffffffffffdda0
+
+
+# where we actually land
+Dump of assembler code for function main:
+   0x0000555555555169 <+0>:	endbr64
+   0x000055555555516d <+4>:	push   %rbp
+   0x000055555555516e <+5>:	mov    %rsp,%rbp
+   0x0000555555555171 <+8>:	sub    $0x10,%rsp
+=> 0x0000555555555175 <+12>:	mov    $0x50,%edi
+   0x000055555555517a <+17>:	call   0x555555555070 <malloc@plt>
+   0x000055555555517f <+22>:	mov    %rax,-0x8(%rbp)
+   0x0000555555555183 <+26>:	movl   $0x0,-0xc(%rbp)
+   0x000055555555518a <+33>:	jmp    0x5555555551a9 <main+64>
+   0x000055555555518c <+35>:	mov    -0xc(%rbp),%eax
+   0x000055555555518f <+38>:	cltq
+   0x0000555555555191 <+40>:	lea    0x0(,%rax,4),%rdx
+   0x0000555555555199 <+48>:	mov    -0x8(%rbp),%rax
+   0x000055555555519d <+52>:	add    %rax,%rdx
+   0x00005555555551a0 <+55>:	mov    -0xc(%rbp),%eax
+   0x00005555555551a3 <+58>:	mov    %eax,(%rdx)
+   0x00005555555551a5 <+60>:	addl   $0x1,-0xc(%rbp)
+   0x00005555555551a9 <+64>:	cmpl   $0x9,-0xc(%rbp)
+   0x00005555555551ad <+68>:	jle    0x55555555518c <main+35>
+   0x00005555555551af <+70>:	mov    -0x8(%rbp),%rax
+   0x00005555555551b3 <+74>:	mov    %rax,%rdi
+   0x00005555555551b6 <+77>:	call   0x555555555060 <free@plt>
+   0x00005555555551bb <+82>:	mov    $0x0,%eax
+   0x00005555555551c0 <+87>:	leave
+   0x00005555555551c1 <+88>:	ret
+End of assembler dump.
+# stack
+0x7fffffffdd90:	0xffffde80	0x00007fff	0xffffdec8	0x00007fff
+0x7fffffffdda0:	0xffffde40	0x00007fff	0xf7c2a1ca	0x00007fff
+0x7fffffffddb0:	0xffffddf0	0x00007fff	0xffffdec8	0x00007fff
+0x7fffffffddc0:	0x55554040	0x00000001	0x55555169	0x00005555
+
+
+# addresses of the variables
+Symbol "arr" is a complex DWARF expression:
+     0: DW_OP_fbreg -24
+.
+
+
+# continue to the next breakpoint
+[Inferior 1 (process 7328) exited normally]
+
+
+# where we actually land
+gdb_komande.txt:34: Error in sourced command file:
+No frame selected.
+warning: Error detected on fd 0
+error detected on stdin
