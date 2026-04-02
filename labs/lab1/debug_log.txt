@@ -1,0 +1,78 @@
+natasamiljevic@DESKTOP-8N9TU1L:~/purv$ gcc -g natasa.c -o natasa
+natasamiljevic@DESKTOP-8N9TU1L:~/purv$ ./natasa
+Segmentation fault (core dumped)
+natasamiljevic@DESKTOP-8N9TU1L:~/purv$ gdb natasa
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from natasa...
+(gdb) list
+1       #include <stdio.h>
+2
+3       int add_numbers(int n1, int n2)
+4       {
+5            int sum=n1+n2;
+6            return sum;
+7       }
+8
+9       int suma;
+10
+(gdb) list
+11      int main()
+12      {
+13               char *poruka = "Suma brojeva 1 i 2 je";
+14           int n1=1;
+15           int n2=2;
+16           
+17           suma=add_numbers(n1,n2);
+18           *(poruka+2) = 'x';
+19           printf("%s %d\n", poruka, suma);
+20
+(gdb) b main
+Breakpoint 1 at 0x1173: file natasa.c, line 13.
+(gdb) run
+Starting program: /home/natasamiljevic/purv/natasa 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at natasa.c:13
+13               char *poruka = "Suma brojeva 1 i 2 je";
+(gdb) next
+14           int n1=1;
+(gdb) print poruka
+$1 = 0x555555556004 "Suma brojeva 1 i 2 je"
+(gdb) next
+15           int n2=2;
+(gdb) 
+17           suma=add_numbers(n1,n2);
+(gdb) print n1
+$2 = 1
+(gdb) print n2
+$3 = 2
+(gdb) next
+18           *(poruka+2) = 'x';
+(gdb) print suma
+$4 = 3
+(gdb) next
+
+Program received signal SIGSEGV, Segmentation fault.
+main () at natasa.c:18
+18           *(poruka+2) = 'x';
+
+
+Debagovanjem u GDB-u utvrđeno je da su n1=1, n2=2 i suma=3, što znači da funkcija add_numbers radi ispravno.
+Program se prekida na liniji *(poruka+2) = 'x'; u funkciji main.
+Pokazivač poruka pokazuje na string literal "Suma brojeva 1 i 2 je".
+Uzrok greške je pokušaj izmjene string literala, što dovodi do SIGSEGV greške.

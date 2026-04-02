@@ -1,0 +1,86 @@
+Pokretanje programa i pracenje izvrsavanja:
+[1] Postavljanje breakpoint-a na main
+Breakpoint 1 at 0x1173: file natasa.c, line 13.
+[2] Postavljanje breakpoint-a na funkciju add_numbers
+Breakpoint 2 at 0x1157: file natasa.c, line 5.
+[3] Pokretanje programa
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at natasa.c:13
+13		 char *poruka = "Suma brojeva 1 i 2 je";
+[4] Zaustavljanje na main
+8	
+9	int suma;
+10	
+11	int main()
+12	{
+13		 char *poruka = "Suma brojeva 1 i 2 je";
+14	     int n1=1;
+15	     int n2=2;
+16	     
+17	     suma=add_numbers(n1,n2);
+$1 = 0
+$2 = 0x0
+[5] Prelazak na inicijalizaciju n1
+14	     int n1=1;
+$3 = 0x555555556004 "Suma brojeva 1 i 2 je"
+[6] Prelazak na inicijalizaciju n2
+15	     int n2=2;
+$4 = 1
+[7] Dolazak do poziva funkcije add_numbers
+17	     suma=add_numbers(n1,n2);
+$5 = 1
+$6 = 2
+[8] Ulazak u funkciju add_numbers
+
+Breakpoint 2, add_numbers (n1=1, n2=2) at natasa.c:5
+5	     int sum=n1+n2;
+1	#include <stdio.h>
+2	
+3	int add_numbers(int n1, int n2)
+4	{
+5	     int sum=n1+n2;
+6	     return sum;
+7	}
+8	
+9	int suma;
+10	
+$7 = 1
+$8 = 2
+[9] Povratak iz funkcije i nastavak izvrsavanja
+main () at natasa.c:17
+17	     suma=add_numbers(n1,n2);
+Value returned is $9 = 3
+$10 = 0
+[10] Dolazak na spornu liniju
+12	{
+13		 char *poruka = "Suma brojeva 1 i 2 je";
+14	     int n1=1;
+15	     int n2=2;
+16	     
+17	     suma=add_numbers(n1,n2);
+18	     *(poruka+2) = 'x';
+19	     printf("%s %d\n", poruka, suma);
+20	
+21	     return 0;
+$11 = 0
+$12 = 0x555555556004 "Suma brojeva 1 i 2 je"
+0x555555556004:	"Suma brojeva 1 i 2 je"
+[11] Pokusaj izvrsavanja sporne linije
+18	     *(poruka+2) = 'x';
+[12] Stanje nakon pada programa
+#0  main () at natasa.c:18
+13		 char *poruka = "Suma brojeva 1 i 2 je";
+14	     int n1=1;
+15	     int n2=2;
+16	     
+17	     suma=add_numbers(n1,n2);
+18	     *(poruka+2) = 'x';
+19	     printf("%s %d\n", poruka, suma);
+20	
+21	     return 0;
+22	}
+$13 = 3
+$14 = 0x555555556004 "Suma brojeva 1 i 2 je"
+0x555555556004:	"Suma brojeva 1 i 2 je"

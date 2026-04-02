@@ -1,0 +1,61 @@
+set logging file gdb-output.txt
+set logging overwrite on
+set logging enabled on
+
+echo Pokretanje programa i pracenje izvrsavanja:\n
+
+echo [1] Postavljanje breakpoint-a na main\n
+break main
+
+echo [2] Postavljanje breakpoint-a na funkciju add_numbers\n
+break add_numbers
+
+echo [3] Pokretanje programa\n
+run
+
+echo [4] Zaustavljanje na main\n
+list
+print suma
+print poruka
+
+echo [5] Prelazak na inicijalizaciju n1\n
+next
+print poruka
+
+echo [6] Prelazak na inicijalizaciju n2\n
+next
+print n1
+
+echo [7] Dolazak do poziva funkcije add_numbers\n
+next
+print n1
+print n2
+
+echo [8] Ulazak u funkciju add_numbers\n
+continue
+list
+print n1
+print n2
+
+echo [9] Povratak iz funkcije i nastavak izvrsavanja\n
+finish
+print suma
+
+echo [10] Dolazak na spornu liniju\n
+list
+print suma
+print poruka
+x/s poruka
+
+echo [11] Pokusaj izvrsavanja sporne linije\n
+next
+
+echo [12] Stanje nakon pada programa\n
+backtrace
+list
+print suma
+print poruka
+x/s poruka
+
+set logging enabled off
+quit
