@@ -202,7 +202,15 @@ int main(int argc, char *argv[])
 
     printf("Initial state:\n\n");
 
-    init_cells();
+    char *file_name;
+    if (argc > 2)
+    {
+        init_cells(argv[2]);            
+    }
+    else
+    {
+        init_cells("initial.txt");
+    }
     print_cells();
 
     start_cells();

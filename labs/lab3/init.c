@@ -7,12 +7,12 @@
 
 extern perfect_cell matrix[NUM_OF_ROWS][NUM_OF_COLUMNS];
 
-void init_cells()
+void init_cells(char *file_name)
 {
-    FILE *fp = fopen("initial.txt", "r");
+    FILE *fp = fopen(file_name, "r");
     if (!fp)
     {
-        perror("fopen: initial.txt");
+        perror("fopen");
         exit(EXIT_FAILURE);
     }
 
@@ -23,8 +23,8 @@ void init_cells()
         if (!fgets(line, sizeof(line), fp))
         {
             fprintf(stderr,
-                    "Greska: initial.txt ima manje od %d redova (nedostaje red %d).\n",
-                    NUM_OF_ROWS, r);
+                    "Greska: %s ima manje od %d redova (nedostaje red %d).\n",
+                    file_name, NUM_OF_ROWS, r);
             fclose(fp);
             exit(EXIT_FAILURE);
         }
@@ -39,8 +39,8 @@ void init_cells()
         if ((int)len != NUM_OF_COLUMNS)
         {
             fprintf(stderr,
-                    "Greska: red %d u initial.txt ima %zu znakova, ocekivano %d.\n",
-                    r, len, NUM_OF_COLUMNS);
+                    "Greska: red %d u %s ima %zu znakova, ocekivano %d.\n",
+                    r, file_name, len, NUM_OF_COLUMNS);
             fclose(fp);
             exit(EXIT_FAILURE);
         }
