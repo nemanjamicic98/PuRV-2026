@@ -1,0 +1,1 @@
+savedcmd_/home/filip/PURV/labs/lab5/driver/conway_driver.mod := printf '%s\n'   conway_driver.o | awk '!x[$$0]++ { print("/home/filip/PURV/labs/lab5/driver/"$$0) }' > /home/filip/PURV/labs/lab5/driver/conway_driver.mod

@@ -1,0 +1,1 @@
+savedcmd_/home/filip/PURV/labs/lab5/driver/Module.symvers :=  scripts/mod/modpost -M -m -a      -o /home/filip/PURV/labs/lab5/driver/Module.symvers -n -T /home/filip/PURV/labs/lab5/driver/modules.order -i Module.symvers -e 

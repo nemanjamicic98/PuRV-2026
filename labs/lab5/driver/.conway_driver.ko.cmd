@@ -1,0 +1,1 @@
+savedcmd_/home/filip/PURV/labs/lab5/driver/conway_driver.ko := arm-linux-gnueabihf-ld -r -EL -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm/module.lds -o /home/filip/PURV/labs/lab5/driver/conway_driver.ko /home/filip/PURV/labs/lab5/driver/conway_driver.o /home/filip/PURV/labs/lab5/driver/conway_driver.mod.o /home/filip/PURV/labs/lab5/driver/.module-common.o
