@@ -2,43 +2,67 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <linux/ioctl.h>
+#include <linux/kernel.h>
 
 #define MAGIC_NO 'k'
-#define IOCTL_SET_AND_GET _IOWR(MAGIC_NO, 1, struct cell_data)
-
-struct cell_data {
-    int neighbors[9]; 
-    int result;
-};
+#define WR_VALUE _IOW(MAGIC_NO, 'a', int32_t*)
+#define RD_VALUE _IOR(MAGIC_NO, 'b', int32_t*)
 
 static int major;
+static int32_t value = 0;
+static int32_t new_state = 0;
 static int data_written = 0;
 
-static long life_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
-    struct cell_data cd;
-    
-    if (cmd != IOCTL_SET_AND_GET) return -EINVAL;
-    if (copy_from_user(&cd, (struct cell_data *)arg, sizeof(cd))) return -EFAULT;
+static void determine_cell_new_state(void) {
+    int alive_neighbour_count = 0;
 
-    data_written = 1;
+    int b8 = (value >> 8) & 0x1;
+    int b7 = (value >> 7) & 0x1;
+    int b6 = (value >> 6) & 0x1;
+    int b5 = (value >> 5) & 0x1;
+    int cell = (value >> 4) & 0x1;
+    int b3 = (value >> 3) & 0x1;
+    int b2 = (value >> 2) & 0x1;
+    int b1 = (value >> 1) & 0x1;
+    int b0 = value & 0x1;
 
-    int alive_neighbors = 0;
-    for (int i = 0; i < 8; i++) {
-        if (cd.neighbors[i] == 1) alive_neighbors++;
-    }
+    alive_neighbour_count = b8 + b7 + b6 + b5 + b3 + b2 + b1 + b0;
 
-    int current_state = cd.neighbors[8];
-    if (current_state == 1) {
-        cd.result = (alive_neighbors == 2 || alive_neighbors == 3) ? 1 : 0;
+    if (cell == 1) {
+        new_state = (alive_neighbour_count == 2 || alive_neighbour_count == 3) ? 1 : 0;
     } else {
-        cd.result = (alive_neighbors == 3) ? 1 : 0;
+        new_state = (alive_neighbour_count == 3) ? 1 : 0;
     }
+}
 
-    if (copy_to_user((struct cell_data *)arg, &cd, sizeof(cd))) return -EFAULT;
+static long life_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
+    switch(cmd) {
+        case WR_VALUE:
+            if (copy_from_user(&value, (int32_t*)arg, sizeof(value))) {
+                return -EFAULT;
+            }
+            data_written = 1;
+            determine_cell_new_state();
+            break;
+        case RD_VALUE:
+            if (!data_written) {
+                return -EINVAL;
+            }
+            if (copy_to_user((int32_t*)arg, &new_state, sizeof(new_state))) {
+                return -EFAULT;
+            }
+            data_written = 0;
+            break;
+        default:
+            return -EINVAL;
+    }
     return 0;
 }
 
-static struct file_operations fops = { .unlocked_ioctl = life_ioctl };
+static struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .unlocked_ioctl = life_ioctl
+};
 
 static int __init life_init(void) {
     major = register_chrdev(0, "life_service", &fops);
