@@ -243,10 +243,7 @@ ssize_t conway_proc_read(struct file *file, char __user *buf, size_t count, loff
                                 died_cells,
                                 generation_count);
         mutex_unlock(&conway_lock);
-
-        if (len > count)
-                len = count;
-
+     
         if(copy_to_user(buf, kbuf, len))
                 return -EFAULT;
         
