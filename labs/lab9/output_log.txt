@@ -1,0 +1,34 @@
+Initial count                 : Pagefaults, Major:2 (Allowed >=0), Minor:165 (Allowed >=0)
+mlockall() generated          : Pagefaults, Major:0 (Allowed >=0), Minor:98 (Allowed >=0)
+malloc() and touch generated  : Pagefaults, Major:0 (Allowed >=0), Minor:25600 (Allowed >=0)
+2nd malloc() and use generated: Pagefaults, Major:0 (Allowed 0), Minor:0 (Allowed 0)
+
+
+Look at the output of ps -leyf, and see that the RSS is now about 100 [MB]
+
+Demonstracija inverzije prioriteta:
+LOW:    sleep_time = 1, priority = 1
+HIGH:   sleep_time = 2, priority = 99
+MEDIUM: sleep_time = 3, priority = 50
+
+LOW: spavam 1 sekundi prije svog posla.
+HIGH: spavam 2 sekundi prije svog posla.
+MEDIUM: spavam 3 sekundi prije svog posla.
+LOW: probudila sam se i pokusavam zakljucati mutex.
+LOW: dobila sam mutex. shared_val = 0
+LOW: aktivno koristim dijeljeni resurs 4 sekunde CPU vremena.
+HIGH: probudila sam se i pokusavam zakljucati mutex.
+MEDIUM: probudila sam se; ne koristim mutex niti shared_val.
+MEDIUM: aktivno radim 4 sekunde CPU vremena.
+MEDIUM: zavrsila sam svoj posao.
+LOW: shared_val += 1, sada je shared_val = 1
+LOW: sada oslobadjam mutex.
+HIGH: dobila sam mutex. shared_val = 1
+HIGH: shared_val += 100, sada je shared_val = 101
+HIGH: sada oslobadjam mutex.
+HIGH: zavrsavam.
+LOW: zavrsavam.
+
+Sve niti su zavrsile.
+Konacna vrijednost shared_val = 101
+Ocekivana vrijednost je 101: LOW dodaje 1, HIGH dodaje 100.
